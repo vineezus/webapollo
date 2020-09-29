@@ -138,7 +138,8 @@ def sizing_cal(id, consum):
 
     #payback valor inicial
 
-    return json.dumps({
+    return ('no mistake round here')
+    """ return json.dumps({
         "mod_quant": modqt_list,
         "mod_price": mod_totalprice_list,
         "mod_weight": mod_weightlist,
@@ -152,4 +153,4 @@ def sizing_cal(id, consum):
         "co2": eco,
         "area": area_list,
         "other_weight": other_weightlist
-    })
+    }) """

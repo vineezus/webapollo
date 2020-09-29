@@ -1,10 +1,14 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import ReactDOM from 'react-dom';
+import { GlobalProvider } from '../../context/GlobalState';
+import Form from './Form';
 
-class App extends Component {
-    render() {
-        return <h1>React App</h1>
-    }
+function App() {
+    return (
+        <GlobalProvider>
+            <Form />
+        </GlobalProvider>
+    );
 }
 
 ReactDOM.render(<App />, document.getElementById('app'));
