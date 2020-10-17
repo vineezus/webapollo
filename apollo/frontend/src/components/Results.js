@@ -1,17 +1,23 @@
 import React, { useContext, useEffect } from 'react';
-import { ResultsItem } from './ResultsItem';
+import ResultsItem from './ResultsItem';
 
 import { GlobalContext } from '../../context/GlobalState';
 
-export const TransactionList = () => {
-    const { results } = useContext(GlobalContext);
+const Results = () => {
 
-    return (
-        <>
-            <h3>Histórico</h3>
-            <ul id="list" className="list">
-                {transactions.map(transaction => (<Transaction key={transaction.id} transaction={transaction} /*passando o item de transação como prop*/ />))}
-            </ul>
-        </>
-    )
+    const { gotResults, results } = useContext(GlobalContext);
+
+    if (gotResults){
+        return (
+            <>
+                <h3>Resultado</h3>
+                <ul id="list" className="list">
+                    {results.map(result => (<ResultsItem key={result.id} result={result} />))}
+                </ul>
+            </>
+        )
+    }
+    
 }
+
+export default Results;

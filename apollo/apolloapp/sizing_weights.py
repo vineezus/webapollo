@@ -1,25 +1,20 @@
 import math
 
-def mod_weight(modlist):
-    #peso da dos paineis (Em kg)
+def mod_weight(modqt, modpower, mode):
+    if mode == 'off':
+        mod_index = int((modpower/50)-1)
+        mod_unilist = [4.9, 7.3, 11.25] #peso dos paineis (Em kg)
+        modweight = mod_unilist[mod_index] * modpower
+    else:
+        mod_uni = 23.2
+        modweight = mod_uni * modqt
 
-    mod_uniweight_list = [4.9, 7.3, 11.25, 23.2, 23.2]
+    return modweight
 
-    mod_weight_list = []
-    for q, w in zip(modlist, mod_uniweight_list):
-        mod_weight_list.append(math.ceil(q * w))
-
-    return mod_weight_list
-
-def batt_weight(battlist):
-
-    batt_uniweight_list = [14.7, 19]
-
-    batt_weight_list = []
-    for qtt in battlist:
-        if battlist.index(qtt) <= 2:
-            batt_weight_list.append(math.ceil(qtt * batt_uniweight_list[0]))
-        else:
-            batt_weight_list.append(math.ceil(qtt * batt_uniweight_list[1]))
+def batt_weight(battqt, batt_amp):
+    if batt_amp == 70:
+        batt_weight = math.ceil(battqt * 14.7)
+    else:
+        batt_weight = math.ceil(battqt * 19)
         
-    return batt_weight_list
+    return batt_weight

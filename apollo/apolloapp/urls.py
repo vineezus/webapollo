@@ -1,7 +1,7 @@
-from rest_framework import routers
 from django.urls import path
-from .views import SizingView
+from .views import OffSizingView, OnSizingView
 
 urlpatterns = [
-    path('', SizingView.as_view(), name='sizing_calculate')
+    path('off/', OffSizingView.as_view(), name='sizing_off'),
+    path('on/', OnSizingView.as_view(), name='sizing_on')
 ]

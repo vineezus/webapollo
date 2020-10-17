@@ -1,12 +1,12 @@
-import React, {Component, Fragment} from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { GlobalProvider } from '../../context/GlobalState';
-import Form from './Form';
+import SizingArea from './SizingArea';
 
 function App() {
     return (
         <GlobalProvider>
-            <Form />
+            <SizingArea />
         </GlobalProvider>
     );
 }

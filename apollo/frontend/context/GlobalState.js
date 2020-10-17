@@ -3,7 +3,12 @@ import AppReducer from './AppReducer';
 import axios from 'axios';
 
 //Initial State
-const initialState = {}
+const initialState = {
+    results: null,
+    gotResults: false,
+    loading: false,
+    error: null,
+}
 
 //Create context = por onde as components vão acessar o state
 export const GlobalContext = createContext(initialState);
@@ -14,7 +19,34 @@ export const GlobalProvider = ( { children }) => {
 
     //Actions
     async function getSized(formAns) {
-        console.log(formAns, typeof(formAns))
+        const config = {
+            header: {
+                'Content-Type': 'application/json'
+            }
+        }
+
+        console.log(formAns)
+    
+        try {
+            const res = await axios.post('/api/off/', formAns, config);
+
+            //dispatch() is the method used to dispatch actions and trigger state changes to the store
+            dispatch({
+                type: 'GET_ANSWER',
+                payload: res.data,
+            });
+
+            console.log(res.data)
+            console.log(res + "@res", res.data + "@data", res.data.data + "@data.data")
+        } catch (error) {
+            dispatch({
+                type: 'ANSWER_ERROR',
+                payload: error.response.data.error
+            });
+        }
+    }
+
+    async function getOnSized(formAns) {
         const config = {
             header: {
                 'Content-Type': 'application/json'
@@ -22,33 +54,31 @@ export const GlobalProvider = ( { children }) => {
         }
     
         try {
-            const res = await axios.get('/api/', { formAns }, config);
+            const res = await axios.post('/api/on/', formAns, config);
 
             //dispatch() is the method used to dispatch actions and trigger state changes to the store
             dispatch({
                 type: 'GET_ANSWER',
-                payload: res.data.data
+                payload: res.data,
             });
-            
-            console.log(res.data.data, typeof(res.data.data), 'datadata')
-            console.log(res.data, typeof(res.data), 'data')
-            console.log(JSON.stringify(res.data.data) + '  response data')
 
         } catch (error) {
             dispatch({
                 type: 'ANSWER_ERROR',
-                payload: error.response.data.error
+                payload: error
             });
 
-            console.log(JSON.stringify(error.response.data.error) + '  error')
+            console.log('=> ripada')
         }
     }
 
     return (<GlobalContext.Provider value={{
         results: state.results,
-        error: state.error,
+        gotResults: state.gotResults,
         loading: state.loading,
+        error: state.error,
         getSized, //chamar a action aqui pra usar nos componentes
+        getOnSized,
     }}>
         {children}
     </GlobalContext.Provider>);
