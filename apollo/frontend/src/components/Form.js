@@ -27,7 +27,7 @@ const Form = (props) => {
         switch(props.onGrid){
             case 0:
                 const formAns = {
-                    config: {"mod": 50, "batt": 70, "ctr": 60},
+                    config: {"mod": 50, "batt": 70, "ctr": 30},
                     id: Number(id), 
                     consum: Number(consum)
                 }

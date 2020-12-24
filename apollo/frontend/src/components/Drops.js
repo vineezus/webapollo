@@ -43,11 +43,11 @@ function shallowEqual(object1, object2) {
 
 function Drops(props) {
 
-  const [modValue, setModValue] = useState({ value: 50, label: '50 W' })
-  const [ctrValue, setCtrValue] = useState({ value: 30, label: '30 W' })
-  const [battValue, setBattValue] = useState({ value: 70, label: '70 A' })
+  const { getSized, getOnSized, updateResults, id, consum, config } = useContext(GlobalContext);
 
-  const { getSized, getOnSized, updateResults, id, consum, loadUpdate, loading } = useContext(GlobalContext);
+  const [modValue, setModValue] = useState({ value: config.mod, label: `${config.mod} W` })
+  const [ctrValue, setCtrValue] = useState({ value: config.ctr, label: `${config.ctr} W` })
+  const [battValue, setBattValue] = useState({ value: config.batt, label: `${config.batt} A` })
 
   const handleDropOn = (opt) => {
     getOnSized(

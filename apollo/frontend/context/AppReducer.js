@@ -8,6 +8,7 @@ export default (state, action) => {
                 loading: true,
                 id: action.id,
                 consum: action.consum,
+                config: action.config,
                 results: action.payload,
             }
         case 'ANSWER_ERROR':

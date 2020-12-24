@@ -6,6 +6,7 @@ import axios from 'axios';
 const initialState = {
     id: null,
     consum: null,
+    config: null, 
     cities: [],
     form: null,
     results: null,
@@ -55,6 +56,7 @@ export const GlobalProvider = ( { children }) => {
                 payload: res.data,
                 id: formAns.id,
                 consum: formAns.consum,
+                config: formAns.config
             });
 
         } catch (error) {
@@ -81,6 +83,7 @@ export const GlobalProvider = ( { children }) => {
                 payload: res.data,
                 id: formAns.id,
                 consum: formAns.consum,
+                config: formAns.config
             });
 
         } catch (error) {
@@ -106,6 +109,7 @@ export const GlobalProvider = ( { children }) => {
     return (<GlobalContext.Provider value={{
         id: state.id,
         consum: state.consum,
+        config: state.config,
         cities: state.cities,
         form: state.form,
         results: state.results,
