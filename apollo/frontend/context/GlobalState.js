@@ -4,10 +4,14 @@ import axios from 'axios';
 
 //Initial State
 const initialState = {
+    id: null,
+    consum: null,
+    cities: [],
+    form: null,
     results: null,
     gotResults: false,
     loading: false,
-    error: null,
+    errors: null,
 }
 
 //Create context = por onde as components vão acessar o state
@@ -18,14 +22,29 @@ export const GlobalProvider = ( { children }) => {
     const [state, dispatch] = useReducer(AppReducer, initialState);
 
     //Actions
+    async function getCities() {
+        let res;
+
+        try {
+            res = await axios.get('/api/cities/');
+
+            dispatch({
+                type: 'GET_CITIES',
+                payload: res.data,
+            })
+
+        } catch (error) {
+            
+            console.log(error.response.data.error)
+        }
+    }
+
     async function getSized(formAns) {
         const config = {
             header: {
                 'Content-Type': 'application/json'
             }
         }
-
-        console.log(formAns)
     
         try {
             const res = await axios.post('/api/off/', formAns, config);
@@ -34,14 +53,14 @@ export const GlobalProvider = ( { children }) => {
             dispatch({
                 type: 'GET_ANSWER',
                 payload: res.data,
+                id: formAns.id,
+                consum: formAns.consum,
             });
 
-            console.log(res.data)
-            console.log(res + "@res", res.data + "@data", res.data.data + "@data.data")
         } catch (error) {
             dispatch({
                 type: 'ANSWER_ERROR',
-                payload: error.response.data.error
+                payload: error.response.data
             });
         }
     }
@@ -60,6 +79,8 @@ export const GlobalProvider = ( { children }) => {
             dispatch({
                 type: 'GET_ANSWER',
                 payload: res.data,
+                id: formAns.id,
+                consum: formAns.consum,
             });
 
         } catch (error) {
@@ -67,18 +88,37 @@ export const GlobalProvider = ( { children }) => {
                 type: 'ANSWER_ERROR',
                 payload: error
             });
-
-            console.log('=> ripada')
         }
     }
 
+    const idUpdate = (newId) => 
+    dispatch({
+        type: "SET_CITYID",
+        payload: newId
+    })
+
+    const loadUpdate = () => dispatch({ type: 'LOADING_UPDATE', })
+
+    const comeBack = () => dispatch({ type: 'COMEBACK_BABY', })
+
+    const updateResults = () => dispatch({type: 'UPDATE_RESULTS', })
+
     return (<GlobalContext.Provider value={{
+        id: state.id,
+        consum: state.consum,
+        cities: state.cities,
+        form: state.form,
         results: state.results,
         gotResults: state.gotResults,
         loading: state.loading,
-        error: state.error,
+        errors: state.errors,
         getSized, //chamar a action aqui pra usar nos componentes
         getOnSized,
+        loadUpdate,
+        idUpdate,
+        getCities,
+        comeBack,
+        updateResults,
     }}>
         {children}
     </GlobalContext.Provider>);

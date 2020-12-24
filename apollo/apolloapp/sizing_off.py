@@ -21,7 +21,7 @@ def sizingoff_cal(config, id, consum):
     batt_amp = config['batt']
 
     ctr_amp = config['ctr']
-
+    
     ##### Chamar o tariff também pelo ID ##########
     irrad = irradbyID(id)
 

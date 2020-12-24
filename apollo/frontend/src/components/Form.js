@@ -1,58 +1,78 @@
-import { stringify } from 'postcss';
-import { string } from 'prop-types';
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect } from 'react';
 import { GlobalContext } from '../../context/GlobalState';
-import './App.css';
+import Switch from 'react-input-switch';
+import Loader from 'react-loader-spinner';
+import AutoSug from './AutoSug';
+import Alerts from './Alerts';
+import app from './App.css';
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
-const Form = ({onGrid}) => {
-    const [textId, setTextID] = useState(0);
+
+const Form = (props) => {
+    //const [cityId, setCityId] = useState()
     const [consum, setConsum] = useState();
-    console.log(onGrid)
 
-    const { getSized, getOnSized } = useContext(GlobalContext);
+    const { getSized, getOnSized, getCities, id, loading, loadUpdate } = useContext(GlobalContext);
+
+    useEffect(() => {
+        console.log(loading+` @form`)
+    }, [])
+
 
     const onSubmit = e => {
         e.preventDefault();
 
-        console.log(onGrid + "@submit")
-        switch(onGrid){
+        loadUpdate()
+        
+        switch(props.onGrid){
             case 0:
                 const formAns = {
                     config: {"mod": 50, "batt": 70, "ctr": 60},
-                    id: Number(textId), 
+                    id: Number(id), 
                     consum: Number(consum)
                 }
                 
                 getSized(formAns)
-
                 break
+
             case 1:
                 const formAnsOn = {
                     config: {"mod": 250},
-                    id: Number(textId), 
+                    id: Number(id), 
                     consum: Number(consum)
                 }
                 
                 getOnSized(formAnsOn)
-        }
+                break
+            }
     
-        setTextID()
-        setConsum()
+        getCities()
     }
 
     return (
         <>
-            <form onSubmit={onSubmit}>
+            {
+            loading?
+            <Loader type="Oval" color="#ff8800f6" height={50} width={50} />
+            :
+            <React.Fragment>
+                <label>Off-Grid</label>
+                <Switch on={1} off={0} value={props.onGrid} onChange={props.setOnGrid} />
+                <label>On-Grid</label>
+                <form onSubmit={onSubmit}>
                 <div className="form-control">
                     <label htmlFor="text">Sua cidade</label>
-                    <input type="number" value={textId} onChange={(e) => setTextID(e.target.value)} placeholder="Digite o id..."/>
+                    <AutoSug theme={app}/>
                 </div>
                 <div className="form-control">
                     <label htmlFor="consum">Info de consumo</label>
-                    <input type="number" value={consum} onChange={(e) => setConsum(e.target.value)} placeholder="Digite a info de consumo..."/>
+                    <input className='input' type="number" value={consum} onChange={(e) => setConsum(e.target.value)} placeholder="Digite a info de consumo..."/>
                 </div>
                 <button className='btn'>Calcule</button>
-            </form>
+                </form>
+                <Alerts />
+            </React.Fragment>
+            }
         </>
     )
 }

@@ -4,8 +4,6 @@ import React, { useContext } from 'react';
 
 const ResultsItem = ({result}) => {
     
-    console.log(result)
-    
     return (
         <li className='minus'>
             {result.id}: {result.text}

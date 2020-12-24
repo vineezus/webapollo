@@ -1,26 +1,29 @@
 import React, { useContext, useState } from 'react'
 import { GlobalContext } from '../../context/GlobalState';
-import Switch from 'react-input-switch';
+import Loader from 'react-loader-spinner';
 import Form from './Form'
 import Results from './Results'
 
 const SizingArea = () => {
 
     const [onGrid, setOnGrid] = useState(0); // '0' => off-grid / '1' => on-grid
-
-    const { getSized, gotResults, loading, form } =  useContext(GlobalContext);
+    
+    const { gotResults } = useContext(GlobalContext);
 
         return (
             <div>
                 {
                 gotResults?
-                <Results />
+                <Results
+                    onGrid={onGrid}
+                    setOnGrid={setOnGrid}
+                />
                 :
                 <React.Fragment>
-                <label>Off-Grid</label>,
-                <Switch on={1} off={0} value={onGrid} onChange={setOnGrid} />,
-                <label>On-Grid</label>,
-                <Form onGrid={onGrid}/>
+                <Form
+                    onGrid={onGrid}
+                    setOnGrid={setOnGrid}
+                />
                 </React.Fragment>
                 }
             </div>

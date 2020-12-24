@@ -1,19 +1,32 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import ResultsItem from './ResultsItem';
+import Drops from './Drops';
 
 import { GlobalContext } from '../../context/GlobalState';
 
-const Results = () => {
+const Results = (props) => {
 
-    const { gotResults, results } = useContext(GlobalContext);
+    const { results, comeBack, gotResults, loading, loadUpdate} = useContext(GlobalContext);
+
+    useEffect(() => {
+        //loadUpdate()
+        console.log(loading+` @results`)
+        console.log(gotResults+` @results`)
+    }, [])
 
     if (gotResults){
         return (
-            <>
-                <h3>Resultado</h3>
-                <ul id="list" className="list">
-                    {results.map(result => (<ResultsItem key={result.id} result={result} />))}
-                </ul>
+            <>  
+                {
+                <React.Fragment>
+                    <button className='back-btn' onClick={comeBack}>Voltar</button>
+                    <Drops onGrid={props.onGrid}/>
+                    <h3>Resultado</h3>
+                    <ul id="list" className="list">
+                        {results.map(result => (<ResultsItem key={result.id} result={result} />))}
+                    </ul>
+                </React.Fragment>
+                }
             </>
         )
     }
