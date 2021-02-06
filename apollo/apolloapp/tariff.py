@@ -1,7 +1,14 @@
 import urllib.request
 import json
+from .models import Cidades
 
-def tariff_sheriff(sig):
+def tariff_sheriff(id):
+
+    sig = Cidades.objects.filter(id=id).values('sigla').get()
+    print(sig)
+    sig = sig["sigla"]
+    print(sig)
+
     try:
         entry = {}
         headers = {}

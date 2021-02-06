@@ -9,7 +9,7 @@ def mod_weight(modqt, modpower, mode):
         mod_uni = 23.2
         modweight = mod_uni * modqt
 
-    return modweight
+    return math.ceil(modweight)
 
 def batt_weight(battqt, batt_amp):
     if batt_amp == 70:
@@ -17,4 +17,4 @@ def batt_weight(battqt, batt_amp):
     else:
         batt_weight = math.ceil(battqt * 19)
         
-    return batt_weight
+    return math.ceil(batt_weight)

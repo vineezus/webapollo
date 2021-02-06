@@ -12,20 +12,42 @@ module.exports = {
                 }}
             },
             {
-                test: /\.(sass|css|scss)$/,
-                use: [
-                  'style-loader',
-                  'css-loader',
-                  {
-                    loader: "postcss-loader",
-                    options: {
-                      plugins: () => [
-                        require("autoprefixer")()
-                      ],
-                    },
+              test: /\.(sass|css|scss)$/,
+              use: [
+                'style-loader',
+                'css-loader',
+                {
+                  loader: "postcss-loader",
+                  options: {
+                    plugins: () => [
+                      require("autoprefixer")()
+                    ],
                   },
-                ]
-              },
+                },
+              ]
+            },
+            {
+              test: /\.svg$/,
+              use: [
+                {
+                  loader: "babel-loader"
+                },
+                {
+                  loader: "react-svg-loader",
+                  options: {
+                    jsx: true // true outputs JSX tags
+                  }
+                }
+              ]
+            },
+            {
+              test: /\.(png|jpe?g|gif)$/i,
+              use: [
+                {
+                  loader: 'file-loader',
+                },
+              ]
+            },
         ]
     }
 }

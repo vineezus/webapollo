@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { GlobalContext } from '../../context/GlobalState';
 import Autosuggest from 'react-autosuggest';
+import './style/AutoSug.css'
     
 // Teach Autosuggest how to calculate suggestions for any given input value.
 // Função que vai ser chamada pra gettar os valores da lista pra mostrar como opção, de acordo com o que foi inputado
@@ -63,7 +64,7 @@ const AutoSug = (props) => {
 
 // Autosuggest will pass through all these props to the input.
   const inputProps = {
-      placeholder: 'Type a programming language',
+      placeholder: 'Selecione sua cidade',
       value,
       onChange: onChange
   };

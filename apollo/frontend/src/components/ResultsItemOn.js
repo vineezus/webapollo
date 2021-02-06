@@ -1,15 +1,11 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 
-const ResultsItem = ({result, setPbOpen, setPrOpen, setWOpen}) => {
-
-    const openPr =  () => setPrOpen(true);
-    const openPb =  () => setPbOpen(true);
-    const openW =  () => setWOpen(true);
-
+const ResultsItemOn = ({result, setPbOpen, setPrOpen, setWOpen}) => {
+    
     switch (result.id) {
         case 'price':
             return (
-                <div className={`${result.id}`} onClick={openPr}>
+                <div className={`${result.id}-on`} onClick={() => setPrOpen(true)}>
                     <h2>{result.text}</h2>
                     <label className="resultLabel">{result.label} </label>
                 </div>
@@ -18,7 +14,7 @@ const ResultsItem = ({result, setPbOpen, setPrOpen, setWOpen}) => {
 
         case 'weight':
             return (
-                <div className={`${result.id}`} onClick={openW}>
+                <div className={`${result.id}-on`} onClick={() => setWOpen(true)}>
                     <h2>{result.text}</h2>
                     <label className="resultLabel">{result.label} </label>
                 </div>
@@ -27,22 +23,22 @@ const ResultsItem = ({result, setPbOpen, setPrOpen, setWOpen}) => {
 
         case 'payback':
             return (
-                <div className={`${result.id}`} onClick={openPb}>
+                <div className={`${result.id}-on`} onClick={() => setPbOpen(true)}>
                     <h2>{result.text}</h2>
                     <label className="resultLabel">{result.label} </label>
                 </div>
             )
             break;
-        
+            
         case 'warnings':
             return (
                 <></>
             )
             break;
-    
+        
         default:
             return (
-                <div className={`${result.id}`}>
+                <div className={`${result.id}-on`}>
                     <h2>{result.text}</h2>
                     <label className="resultLabel">{result.label} </label>
                 </div>
@@ -51,4 +47,4 @@ const ResultsItem = ({result, setPbOpen, setPrOpen, setWOpen}) => {
     }
 }
 
-export default ResultsItem;
+export default ResultsItemOn;

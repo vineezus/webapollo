@@ -11,22 +11,28 @@ const SizingArea = () => {
     const { gotResults } = useContext(GlobalContext);
 
         return (
-            <div>
+            <>
                 {
                 gotResults?
-                <Results
-                    onGrid={onGrid}
-                    setOnGrid={setOnGrid}
-                />
+                <React.Fragment>
+                    <div className="resultsContainer">
+                        <Results
+                            onGrid={onGrid}
+                            setOnGrid={setOnGrid}
+                        />
+                    </div>
+                </React.Fragment>
                 :
                 <React.Fragment>
-                <Form
-                    onGrid={onGrid}
-                    setOnGrid={setOnGrid}
-                />
+                    <div className="container">
+                        <Form
+                            onGrid={onGrid}
+                            setOnGrid={setOnGrid}
+                        />
+                    </div>
                 </React.Fragment>
                 }
-            </div>
+            </>
         )
     }
 

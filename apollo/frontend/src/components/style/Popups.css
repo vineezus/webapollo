@@ -1,0 +1,35 @@
+.popup-content {
+    margin: auto; 
+    background: rgb(255, 255, 255);
+    max-width: 500px;
+    width: fit-content;
+    padding: 2.5vw;
+    left: 12.5vw
+}
+
+.popup-content h3 {
+    margin: 0 0 10px
+}
+
+.popup-arrow {
+    color: rgb(255, 255, 255);
+}
+
+[role='tooltip'].popup-content {
+    width: 200px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 0px 3px;
+}
+
+.popup-overlay {
+
+    background: rgba(0, 0, 0, 0.5);
+}
+
+[data-popup='tooltip'].popup-overlay {
+    background: transparent;
+}
+
+.modal td {
+    text-justify: center;
+    padding: 1em
+}

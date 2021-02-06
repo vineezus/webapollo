@@ -16,9 +16,9 @@ def tax_selix():
         entry = jsource[0]
         selix=float(entry['valor'])
         
-        return selix, 'good'
+        return selix, True
 
     except Exception as e:
-        return 3.65, 'error'
+        return 3.65, False
 
 

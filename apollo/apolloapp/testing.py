@@ -1,7 +1,16 @@
-from .models import Cidades
+dol_stat = True
+pb_stat = True
+both_equal = True if (dol_stat == pb_stat) else False
 
-def discover_id():
-    anan_id = Cidades.objects.filter(cidade='ANANINDEUA').values('id').get()
-    anan_id = str(anan_id)
+#True - False - False => Valores de Payback     (X)
+#False - True - False => Valsores de Custo      (X)
+#False - False - True => Ambos                  (X)
+#True - True - True => Null                     ()
 
-    print(anan_id)
+if (both_equal == False):
+    text = ("Os valores de " + ("Custo", "Payback")[dol_stat] + " podem estar defasados neste dimensionamento")
+else:
+    text = ("Os valores de Custo e Payback podem estar defasados neste dimensionamento",
+            False)[dol_stat]
+
+print(text)

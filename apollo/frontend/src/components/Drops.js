@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Dropdown from 'react-dropdown';
 import { GlobalContext } from '../../context/GlobalState';
-import 'react-dropdown/style.css';
+import './style/Drops.css'
 
 const modOps_og = [
   { value: 250, label: '250 W' },
@@ -104,12 +104,26 @@ function Drops(props) {
     <>
       {
         props.onGrid>0?
-        <Dropdown options={modOps_og} onChange={handleOnChange} />
+        <React.Fragment>
+          <div className="drop">
+            <label>Módulos</label>
+            <Dropdown options={modOps_og} value={modValue} onChange={handleOnChange} />
+          </div>
+        </React.Fragment>
         :
         <React.Fragment>
-        <Dropdown options={modOps} value={modValue} onChange={setModValue, handleOnChange} />
-        <Dropdown options={battOps} value={battValue} onChange={setBattValue, handleOnChange} />
-        <Dropdown options={ctrOps} value={ctrValue} onChange={setCtrValue, handleOnChange} />
+          <div className="drop">
+            <label>Módulos</label>
+            <Dropdown options={modOps} value={modValue} onChange={setModValue, handleOnChange} />
+          </div>
+          <div className="drop">
+            <label>Baterias</label>
+            <Dropdown options={battOps} value={battValue} onChange={setBattValue, handleOnChange} />
+          </div>
+          <div className="drop">
+            <label>Controladores</label>
+            <Dropdown options={ctrOps} value={ctrValue} onChange={setCtrValue, handleOnChange} />
+          </div>
         </React.Fragment>
       }
     </>

@@ -6,7 +6,7 @@ from .sizing_weights import mod_weight, batt_weight
 from .DolarDolarbillyaaall import dolar_data
 from .models import Baterias, Controladores, Modulos, Inversores
 from .irrad import irradbyID
-#from .tariff import tariff_sheriff
+from .payback import thebigpayback
 
 panels = Modulos.objects
 batteries = Baterias.objects
@@ -22,11 +22,10 @@ def sizingoff_cal(config, id, consum):
 
     ctr_amp = config['ctr']
     
-    ##### Chamar o tariff também pelo ID ##########
     irrad = irradbyID(id)
 
-    dolar_var = dolar_data('1')[0]
-    dol_stat = dolar_data('1')[1] #passa como BOOLEAN no return 
+    dol = dolar_data('1')
+    dolar_var = dol[0]
 
     #cálculo da Geração Mínima = (NGD/irrad), para OFF pede o NGD direto então considerar consum = NGD
     #calculation of minimum generation = (NGD/irrad)
@@ -42,7 +41,7 @@ def sizingoff_cal(config, id, consum):
 
     #preço total dos paineis
     #panels' total price 
-    mod_totalprice = (modqt * mod_uniprice['value'] * dolar_var)
+    mod_totalprice = math.ceil((modqt * mod_uniprice['value'] * dolar_var))
 
     #dimensionamento potência do inversor
     #inverter power sizing
@@ -54,7 +53,7 @@ def sizingoff_cal(config, id, consum):
     #preço do inversor
     #inverter's price
     invprice = inverters.filter(pot__gte=pot_seg)[1] #r
-    invprice = invprice.value
+    invprice = math.ceil(invprice.value)
 
     #evitação de CO2 mensal (em kg de CO2)
     #monthly CO2 emission avoidance (CO2 kg)
@@ -74,7 +73,7 @@ def sizingoff_cal(config, id, consum):
 
     #preço total das baterias
     #batteries total price 
-    batt_totalprice = battqt * batt_uniprice.get('value') * dolar_var
+    batt_totalprice = math.ceil(battqt * batt_uniprice.get('value') * dolar_var)
 
     #quantidade de controladores por configuração 
     #amount of charge controllers per configuration
@@ -86,7 +85,7 @@ def sizingoff_cal(config, id, consum):
 
     #preço total das baterias
     #batteries total price
-    ctr_totalprice = ctrqt * ctr_uniprice.get('value') * dolar_var
+    ctr_totalprice = math.ceil(ctrqt * ctr_uniprice.get('value') * dolar_var)
 
     
     #area (m²) de modulos (50w, 100w, 150w)
@@ -97,15 +96,28 @@ def sizingoff_cal(config, id, consum):
     area_index = int((mod_power/50)-1)
     area_uni = modarea_list[area_index]
     
-    area_total = modqt * area_uni
+    area_total = math.ceil(modqt * area_uni)
 
     #pesos
     #weights
     modweight = mod_weight(modqt, mod_power, 'off')
-    other_weight = modweight * 0.05
+    other_weight = math.ceil(modweight * 0.05)
     battweight = batt_weight(battqt, batt_amp)
 
-    #payback valor inicial (EM BREVE!!)
+    #payback
+    total_cost = (mod_totalprice + invprice + batt_totalprice + ctr_totalprice)
+    pb = thebigpayback(id, (modqt*mod_power), total_cost, False)
+
+    #warnings
+    dol_stat = dol[1]
+    pb_stat = pb[2]
+    both_equal = True if (dol_stat == pb_stat) else False
+
+    if (both_equal == False):
+        wrng = ("Os valores de " + ("Custo", "Payback")[dol_stat] + " podem estar defasados neste dimensionamento")
+    else:
+        wrng = ("Os valores de Custo e Payback podem estar defasados neste dimensionamento",
+                False)[dol_stat]
 
     return [
         {
@@ -114,26 +126,31 @@ def sizingoff_cal(config, id, consum):
             "inv_price": invprice,
             "batt_price": batt_totalprice,
             "ctr_price": ctr_totalprice,
+            "label": "Custo Estimado",
             "text": locale.currency((mod_totalprice + invprice + batt_totalprice + ctr_totalprice), grouping=True, symbol='R$')
         },
         {
             "id": "mod",
             "mod_quant": modqt,
+            "label": "Módulos",
             "text": modqt
         },
         {
             "id": "batt",
             "batt_quant": battqt,
+            "label": "Baterias",
             "text": battqt
         },
         {
             "id": "inv",
             "inv_power": invpower,
-            "text": invpower
+            "label": "Inversor",
+            "text": "%s W" % (int(invpower))
         },
         {
             "id": "ctr",
             "ctr_quant": ctrqt,
+            "label": "Controladores de Carga",
             "text": ctrqt
         },
         {
@@ -141,22 +158,34 @@ def sizingoff_cal(config, id, consum):
             "mod_weight": modweight,
             "other_weight": other_weight,
             "batt_weight": battweight,
-            "text": "%s kg" % (modweight + other_weight + battweight)
-        },
+            "label": "Peso",
+            "text": "%s kg" % (math.ceil(modweight + other_weight + battweight))
+        }, 
         {
             "id": "area",
             "area": area_total,
+            "label": "Área",
             "text": "%s m²" % (area_total)
         },
         {
             "id": "payback",
-            "payback_yrs": 'finja que tem o payback aqui',
-            "payback_arrays": 'finja novamente',
-            "text": "paybackyrs"
+            "payback_yrs": pb[0],
+            "payback_arrays": pb[1],
+            "label": "Payback",
+            "text": "%s anos" % (pb[0])
         },
         {
             "id": "co2",
             "co2": eco,
-            "text": eco
+            "label": "Evitação de CO²",
+            "text": "%s kg/mês" % (eco)
+        },
+        {
+            "id": "warnings",
+            "text": wrng
         }
     ]
+
+            
+
+            

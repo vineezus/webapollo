@@ -6,18 +6,18 @@ from .sizing_weights import mod_weight, batt_weight
 from .DolarDolarbillyaaall import dolar_data
 from .models import Modulos, Inversores
 from .irrad import irradbyID
-from .testing import discover_id
+from .payback import thebigpayback
 
 panels = Modulos.objects
 inverters = Inversores.objects.all()
 
 def sizing_cal(config, id, consum):
     mod_power = config['mod']
-    #Chamar o tariff também pelo ID
+
     irrad = irradbyID(id)
 
-    dolar_var = dolar_data('1')[0]
-    dol_stat = dolar_data('1')[1] #passa como BOOLEAN no return 
+    dol = dolar_data('1')
+    dolar_var = dol[0]
 
     #cálculo da Geração Mínima = (NGD (em Wh)/irrad)
     #calculation of minimum generation = (NGD/irrad)
@@ -33,7 +33,7 @@ def sizing_cal(config, id, consum):
 
     #preço total dos paineis
     #panels' total price 
-    mod_totalprice = (modqt * mod_uniprice['value'] * dolar_var)
+    mod_totalprice = math.ceil((modqt * mod_uniprice['value'] * dolar_var))
 
     #dimensionamento potência do inversor
     #inverter power sizing
@@ -45,7 +45,7 @@ def sizing_cal(config, id, consum):
     #preço do inversor
     #inverter's price
     invprice = inverters.filter(pot__gte=pot_seg)[0] #r
-    invprice = invprice.value
+    invprice = math.ceil(invprice.value)
 
     #evitação de CO2 mensal (em kg de CO2)
     #monthly CO2 emission avoidance (CO2 kg)
@@ -57,47 +57,71 @@ def sizing_cal(config, id, consum):
     #pesos
     #weights
     modweight = mod_weight(modqt, mod_power, 'on')
-    other_weight = modweight * 0.05
+    other_weight = math.ceil(modweight * 0.05)
 
-    #payback valor inicial (EM BREVE!!)
+    #payback
+    total_cost = math.ceil(mod_totalprice + invprice)
+    pb = thebigpayback(id, (modqt*mod_power), total_cost, True)
+    
+    #warnings
+    dol_stat = dol[1]
+    pb_stat = pb[2]
+    both_equal = True if (dol_stat == pb_stat) else False
+
+    if (both_equal == False):
+        wrng = ("Os valores de " + ("Custo", "Payback")[dol_stat] + " podem estar defasados neste dimensionamento")
+    else:
+        wrng = ("Os valores de Custo e Payback podem estar defasados neste dimensionamento",
+                False)[dol_stat]
 
     return [
         {
             "id": "price",
             "mod_price": mod_totalprice,
             "inv_price": invprice,
-            "text": locale.currency((mod_totalprice + invprice), grouping=True, symbol='R$')
+            "label": "Custo Estimado",
+            "text": locale.currency(total_cost, grouping=True, symbol='R$')
         },
         {
             "id": "mod",
             "mod_quant": modqt,
+            "label": "Módulos",
             "text": modqt
         },
         {
             "id": "inv",
             "inv_power": invpower,
-            "text": invpower
+            "label": "Inversor",
+            "text": "%s W" % (int(invpower))
         },
         {
             "id": "weight",
             "mod_weight": modweight,
             "other_weight": other_weight,
+            "label": "Peso",
             "text": "%s kg" % (modweight + other_weight)
         },
         {
             "id": "area",
             "area": area_total,
+            "label": "Área",
             "text": "%s m²" % (area_total)
         },
         {
             "id": "payback",
-            "payback_yrs": 'finja que tem o payback aqui',
-            "payback_arrays": 'finja novamente',
-            "text": "paybackyrs"
+            "payback_yrs": pb[0],
+            "payback_arrays": pb[1],
+            "label": "Payback",
+            "text": "%s anos" % (pb[0])
         },
         {
             "id": "co2",
             "co2": eco,
-            "text": eco
+            "label": "Evitação de CO²",
+            "text": "%s kg/mês" % (eco)
+        },
+        {
+            "id": "warnings",
+            "text": wrng
         }
     ]
