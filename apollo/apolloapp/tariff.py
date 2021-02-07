@@ -5,9 +5,7 @@ from .models import Cidades
 def tariff_sheriff(id):
 
     sig = Cidades.objects.filter(id=id).values('sigla').get()
-    print(sig)
     sig = sig["sigla"]
-    print(sig)
 
     try:
         entry = {}
@@ -33,7 +31,7 @@ def tariff_sheriff(id):
         else:
             avg_tarifa=tarifas[0]
 
-        return avg_tarifa, 'good'
+        return avg_tarifa, True
 
     except Exception as e:
-        return 0.56, 'error'
+        return 0.56, False

@@ -6,7 +6,9 @@ from functools import reduce
 
 def thebigpayback(id, consum, invest, ongrid):
 
-    tariff = tariff_sheriff(id)[0]
+    tariff = tariff_sheriff(id)
+    tariff_stat = tariff[1]
+    tariff = tariff[0]
 
     pb = 0
     acc_vp = 0
@@ -20,6 +22,8 @@ def thebigpayback(id, consum, invest, ongrid):
     
     dolar_var = dolar_data('1')
     dolar_var = dolar_var[0]
+
+    pb_stat = True if (tariff_stat or selix_stat) else False
 
     if not ongrid:
         while balance < 0:
@@ -55,4 +59,4 @@ def thebigpayback(id, consum, invest, ongrid):
                 balance += acc_vp
                 pb_append([pb, math.ceil(balance)])
 
-    return pb, list_pb, selix_stat
+    return pb, list_pb, pb_stat

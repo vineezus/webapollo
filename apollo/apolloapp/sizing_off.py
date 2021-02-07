@@ -111,6 +111,7 @@ def sizingoff_cal(config, id, consum):
     #warnings
     dol_stat = dol[1]
     pb_stat = pb[2]
+
     both_equal = True if (dol_stat == pb_stat) else False
 
     if (both_equal == False):

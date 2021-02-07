@@ -23,8 +23,8 @@ def dolar_data(periodo):
         source_entry = jsource[0]
         base_entry = jbase[0]
         
-        dolar_var = float(base_entry['high']/source_entry['high'])
-       
+        dolar_var = float(base_entry['high'])/float(source_entry['high'])
+
         return dolar_var, True
 
     except Exception as e:
