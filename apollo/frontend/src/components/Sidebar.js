@@ -9,7 +9,7 @@ function Sidebar() {
     const [isToggled, setToggle] = useState(true)
 
     return (
-            <ProSidebar /*breakPoint='md'*/ image="https://i.ibb.co/BBjY6K0/imagem.jpg">
+            <ProSidebar image="https://i.ibb.co/BBjY6K0/imagem.jpg">
             <SidebarHeader>
                 <div>
                     <SvgLogo/>
@@ -21,7 +21,7 @@ function Sidebar() {
                     <Link to="/"/>
                 </MenuItem>
                 <MenuItem>
-                    Como funciona?
+                    Como<br></br>Funciona?
                     <Link to="/how"/>
                 </MenuItem>
                 <MenuItem>
@@ -30,6 +30,7 @@ function Sidebar() {
                 </MenuItem>
                 <MenuItem>
                     Sobre
+                    <Link to="/about"/>
                 </MenuItem>
             </Menu>
             </ProSidebar>
