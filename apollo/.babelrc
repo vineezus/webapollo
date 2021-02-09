@@ -1,0 +1,6 @@
+{
+    "presets": ["@babel/preset-env", "@babel/preset-react"],
+    "plugins": ["transform-class-properties", "@babel/plugin-transform-runtime",
+        [ "@babel/plugin-proposal-class-properties", { "loose": true } ],
+        "@babel/transform-async-to-generator"]
+}
